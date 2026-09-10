@@ -83,11 +83,22 @@
                 <h2>Onde & Quando</h2>
                 <div class="divider"></div>
             </div>
-            <div class="local-grid">
-                <div class="local-card">
-                    <h3>Cerimônia & Recepção</h3>
-                    <p class="address">Espaço Villa Bella — Estrada dos Ipês, 1000, São Paulo - SP</p>
+            <div class="local-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+                <!-- Card Cerimônia -->
+                <div class="local-card" style="max-width: 100%;">
+                    <h3>Cerimônia</h3>
+                    <p class="address">Igreja Das Estrelas</p>
                     <p class="date-time">18 de Março de 2028 às 16:00</p>
+                    <div class="map-buttons">
+                        <a href="https://maps.google.com/?q=Igreja+Matriz+São+José" target="_blank" class="btn btn-primary">📍 Google Maps</a>
+                        <a href="https://waze.com/ul?q=Igreja+Matriz+São+José" target="_blank" class="btn btn-secondary">🚗 Waze</a>
+                    </div>
+                </div>
+                <!-- Card Recepção -->
+                <div class="local-card" style="max-width: 100%;">
+                    <h3>Recepção</h3>
+                    <p class="address">Espaço Villa Bella — Estrada dos Ipês, 1000</p>
+                    <p class="date-time">Logo após a cerimônia</p>
                     <div class="map-buttons">
                         <a href="https://maps.google.com/?q=Espaço+Villa+Bella+São+Paulo" target="_blank" class="btn btn-primary">📍 Google Maps</a>
                         <a href="https://waze.com/ul?q=Espaço+Villa+Bella+São+Paulo" target="_blank" class="btn btn-secondary">🚗 Waze</a>
