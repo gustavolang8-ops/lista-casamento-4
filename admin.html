@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | Gustavo & Mariana</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <!-- SDK do Firebase via CDN -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body class="admin-body">
+
+    <!-- Tela de Login -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <h2>Área Restrita</h2>
+            <p>Gustavo & Mariana - Admin</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="adminEmail">E-mail</label>
+                    <input type="email" id="adminEmail" required placeholder="admin@casamento.com">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Senha</label>
+                    <input type="password" id="adminPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Entrar no Painel</button>
+                <div id="loginError" class="form-feedback error" style="display:none;"></div>
+            </form>
+            <p class="back-home"><a href="index.html">← Voltar para o site principal</a></p>
+        </div>
+    </div>
+
+    <!-- Dashboard Principal -->
+    <div id="adminDashboard" class="admin-dashboard" style="display:none;">
+        <header class="admin-header">
+            <div class="container admin-header-flex">
+                <h1>Painel Administrativo</h1>
+                <button id="logoutBtn" class="btn btn-secondary">Sair</button>
+            </div>
+        </header>
+
+        <main class="container admin-main">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="statTotalGifts">0</h3>
+                    <p>Total de Presentes</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="statAvailableGifts">0</h3>
+                    <p>Disponíveis</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="statReservedGifts">0</h3>
+                    <p>Reservados</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="statTotalRsvp">0</h3>
+                    <p>Confirmações RSVP</p>
+                </div>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-tab="giftsTab">Gerenciar Presentes</button>
+                <button class="tab-btn" data-tab="reservationsTab">Lista de Reservas</button>
+                <button class="tab-btn" data-tab="rsvpTab">Lista de RSVP</button>
+            </div>
+
+            <!-- Aba Presentes -->
+            <div id="giftsTab" class="tab-content active">
+                <div class="tab-header-flex">
+                    <h3>Catálogo de Presentes</h3>
+                    <button class="btn btn-primary" id="openAddGiftModal">＋ Adicionar Presente</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="admin-table" id="adminGiftsTable">
+                        <thead>
+                            <tr>
+                                <th>Imagem</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Aba Reservas -->
+            <div id="reservationsTab" class="tab-content">
+                <h3>Presentes Escolhidos pelos Convidados</h3>
+                <div class="table-responsive">
+                    <table class="admin-table" id="adminReservationsTable">
+                        <thead>
+                            <tr>
+                                <th>Convidado</th>
+                                <th>Item</th>
+                                <th>Mensagem</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Aba RSVP -->
+            <div id="rsvpTab" class="tab-content">
+                <h3>Confirmações de Presença (RSVP)</h3>
+                <div class="table-responsive">
+                    <table class="admin-table" id="adminRsvpTable">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Acompanhantes</th>
+                                <th>Comparecerá?</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Adicionar/Editar Presente -->
+    <div class="modal" id="adminGiftModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeAdminModal">&times;</button>
+            <h3 id="adminModalTitle">Adicionar Novo Presente</h3>
+            <form id="adminGiftForm">
+                <input type="hidden" id="editGiftId">
+                <div class="form-group">
+                    <label for="editName">Nome do Presente</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCategory">Categoria</label>
+                    <select id="editCategory" required>
+                        <option value="Cozinha">Cozinha</option>
+                        <option value="Sala">Sala</option>
+                        <option value="Quarto">Quarto</option>
+                        <option value="Banheiro">Banheiro</option>
+                        <option value="Lavanderia">Lavanderia</option>
+                        <option value="Eletros / Eletrônicos">Eletros / Eletrônicos</option>
+                        <option value="Móveis">Móveis</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editPrice">Preço (R$)</label>
+                    <input type="number" step="0.01" id="editPrice" required>
+                </div>
+                <div class="form-group">
+                    <label for="editImage">URL da Imagem</label>
+                    <input type="url" id="editImage" required placeholder="https://exemplo.com/imagem.jpg">
+                </div>
+                <div class="form-group">
+                    <label for="editDesc">Descrição</label>
+                    <textarea id="editDesc" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Salvar Presente</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
