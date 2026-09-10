@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gustavo & Mariana | Nosso Casamento</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- SDK do Firebase via CDN -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <!-- Navegação -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">G & M</a>
+            <nav class="nav-links" id="navLinks">
+                <a href="#inicio">Início</a>
+                <a href="#historia">Nossa História</a>
+                <a href="#local">Local</a>
+                <a href="#presentes">Lista de Presentes</a>
+                <a href="#rsvp">RSVP</a>
+                <a href="#compartilhar">Compartilhar</a>
+            </nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir Menu">☰</button>
+        </div>
+    </header>
+
+    <!-- Seção Início / Capa -->
+    <section id="inicio" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="subtitle">vamos nos casar</span>
+            <h1>Gustavo & Mariana</h1>
+            <p class="wedding-date">18 de Março de 2028</p>
+            
+            <div class="countdown-container" id="countdown">
+                <div class="countdown-box"><span id="days">00</span><span class="label">Dias</span></div>
+                <div class="countdown-box"><span id="hours">00</span><span class="label">Horas</span></div>
+                <div class="countdown-box"><span id="minutes">00</span><span class="label">Min</span></div>
+                <div class="countdown-box"><span id="seconds">00</span><span class="label">Seg</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nossa História -->
+    <section id="historia" class="container section">
+        <div class="section-title">
+            <h2>Nossa História</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>O Início de Tudo</h3>
+                    <p class="date">Dezembro de 2020</p>
+                    <p>Nossos caminhos se cruzaram e a certeza de que caminharíamos juntos nasceu em um sorriso simples.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>O Noivado</h3>
+                    <p class="date">Outubro de 2024</p>
+                    <p>Entre planos para o futuro e a construção da nossa casa, dissemos o primeiro 'sim' oficial rumo ao altar.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>O Grande Dia</h3>
+                    <p class="date">18 de Março de 2028</p>
+                    <p>O momento em que celebraremos nosso amor cercados pelas pessoas mais especiais das nossas vidas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Local do Casamento -->
+    <section id="local" class="section-light section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Onde & Quando</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="local-grid">
+                <div class="local-card">
+                    <h3>Cerimônia & Recepção</h3>
+                    <p class="address">Espaço Villa Bella — Estrada dos Ipês, 1000, São Paulo - SP</p>
+                    <p class="date-time">18 de Março de 2028 às 16:00</p>
+                    <div class="map-buttons">
+                        <a href="https://maps.google.com/?q=Espaço+Villa+Bella+São+Paulo" target="_blank" class="btn btn-primary">📍 Google Maps</a>
+                        <a href="https://waze.com/ul?q=Espaço+Villa+Bella+São+Paulo" target="_blank" class="btn btn-secondary">🚗 Waze</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lista de Presentes -->
+    <section id="presentes" class="container section">
+        <div class="section-title">
+            <h2>Lista de Presentes</h2>
+            <div class="divider"></div>
+            <p>Escolha um item para nos presentear através do nosso sistema de cotas e registro.</p>
+        </div>
+
+        <!-- Barra de Carrinho Flutuante -->
+        <div class="cart-bar" id="cartBar" style="display: none;">
+            <div class="cart-info">🛒 <span id="cartCount">0</span> itens selecionados (<span id="cartTotal">R$ 0,00</span>)</div>
+            <button class="btn btn-accent" id="openCartModalBtn">Ver Carrinho / Finalizar</button>
+        </div>
+
+        <!-- Filtros de Categorias -->
+        <div class="category-filters" id="categoryFilters">
+            <button class="filter-btn active" data-category="todos">Todos</button>
+            <button class="filter-btn" data-category="Cozinha">🍳 Cozinha</button>
+            <button class="filter-btn" data-category="Sala">🛋️ Sala</button>
+            <button class="filter-btn" data-category="Quarto">🛏️ Quarto</button>
+            <button class="filter-btn" data-category="Banheiro">🚿 Banheiro</button>
+            <button class="filter-btn" data-category="Lavanderia">🧹 Lavanderia</button>
+            <button class="filter-btn" data-category="Eletros / Eletrônicos">⚡ Eletros</button>
+            <button class="filter-btn" data-category="Móveis">🪑 Móveis</button>
+        </div>
+
+        <!-- Grid de Presentes -->
+        <div class="gifts-grid" id="giftsGrid"></div>
+    </section>
+
+    <!-- RSVP -->
+    <section id="rsvp" class="section-light section">
+        <div class="container rsvp-container">
+            <div class="section-title">
+                <h2>Confirme sua Presença</h2>
+                <div class="divider"></div>
+                <p>Por favor, confirme até o dia 15 de Fevereiro de 2028.</p>
+            </div>
+            <form id="rsvpForm" class="rsvp-form">
+                <div class="form-group">
+                    <label for="rsvpName">Nome Completo</label>
+                    <input type="text" id="rsvpName" required placeholder="Seu nome e sobrenome">
+                </div>
+                <div class="form-group">
+                    <label for="rsvpGuests">Quantidade de Acompanhantes (incluindo você)</label>
+                    <input type="number" id="rsvpGuests" min="1" max="10" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="rsvpAttendance">Você irá comparecer?</label>
+                    <select id="rsvpAttendance" required>
+                        <option value="sim">Sim, confirmadíssimo(a)!</option>
+                        <option value="nao">Infelizmente não poderei comparecer</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Enviar Confirmação</button>
+                <div id="rsvpFeedback" class="form-feedback" style="display:none;"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Compartilhar e QR Code -->
+    <section id="compartilhar" class="container section text-center">
+        <div class="section-title">
+            <h2>Compartilhe esse Momento</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="share-box">
+            <button class="btn btn-whatsapp" id="whatsappShareBtn">💬 Compartilhar no WhatsApp</button>
+            <div class="qrcode-wrapper">
+                <p>Acesse pelo celular escaneando o QR Code abaixo:</p>
+                <div id="qrcode" class="qrcode-img"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Com amor, Gustavo & Mariana • 2028</p>
+            <p class="admin-link-wrapper"><a href="admin.html" class="admin-link">Área Administrativa</a></p>
+        </div>
+    </footer>
+
+    <!-- Modal de Presente / Reserva -->
+    <div class="modal" id="giftModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeGiftModal">&times;</button>
+            <h3 id="modalGiftName">Nome do Presente</h3>
+            <p class="modal-price" id="modalGiftPrice">R$ 0,00</p>
+            <p class="modal-desc" id="modalGiftDesc">Descrição do item...</p>
+            
+            <form id="giftForm">
+                <input type="hidden" id="modalGiftId">
+                <div class="form-group">
+                    <label for="guestName">Seu Nome Completo</label>
+                    <input type="text" id="guestName" required placeholder="Quem está presenteando?">
+                </div>
+                <div class="form-group">
+                    <label for="guestMessage">Mensagem para os Noivos (Opcional)</label>
+                    <textarea id="guestMessage" placeholder="Deixe um recado carinhoso..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Confirmar Escolha do Presente</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal do Carrinho -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeCartModal">&times;</button>
+            <h3>Seu Carrinho de Presentes</h3>
+            <div id="cartItemsList" class="cart-items-list"></div>
+            <div class="cart-total-container">
+                <strong>Total Geral: <span id="cartModalTotal">R$ 0,00</span></strong>
+            </div>
+            <form id="cartCheckoutForm">
+                <div class="form-group">
+                    <label for="cartGuestName">Seu Nome Completo</label>
+                    <input type="text" id="cartGuestName" required placeholder="Nome completo">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Finalizar e Registrar Presentes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/gifts.js"></script>
+    <script src="js/rsvp.js"></script>
+</body>
+</html>
